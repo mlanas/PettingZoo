@@ -135,6 +135,9 @@ class Scenario(BaseScenario):
             other_pos.append(other.state.p_pos - agent.state.p_pos)
 
         if not agent.adversary:
-            return np.concatenate([agent.goal_a.state.p_pos - agent.state.p_pos] + entity_pos + other_pos)
+            obs = np.concatenate([agent.goal_a.state.p_pos - agent.state.p_pos] + entity_pos + other_pos)
         else:
-            return np.concatenate(entity_pos + other_pos)
+            obs = np.concatenate(entity_pos + other_pos)
+
+        obs_lenght = len(obs)
+        return np.concatenate([obs] + [np.zeros(100-obs_lenght)])
