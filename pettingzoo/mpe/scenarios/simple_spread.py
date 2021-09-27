@@ -85,21 +85,21 @@ class Scenario(BaseScenario):
 
     def observation(self, agent, world):
         # get positions of all entities in this agent's reference frame
-        entity_pos = []
+        landmarks_pos = []
         for entity in world.landmarks:  # world.entities:
-            entity_pos.append(entity.state.p_pos - agent.state.p_pos)
+            landmarks_pos.append(entity.state.p_pos - agent.state.p_pos)
         # entity colors
-        entity_color = []
-        for entity in world.landmarks:  # world.entities:
-            entity_color.append(entity.color)
+        # entity_color = []
+        # for entity in world.landmarks:  # world.entities:
+        #     entity_color.append(entity.color)
         # communication of all other agents
-        other_pos = []
+        other_agents_pos = []
         for other in world.agents:
             if other is agent:
                 continue
-            other_pos.append(other.state.p_pos - agent.state.p_pos)
+            other_agents_pos.append(other.state.p_pos - agent.state.p_pos)
 
-        obs = np.concatenate([agent.state.p_vel] + [agent.state.p_pos] + entity_pos + other_pos)
+        obs = np.concatenate([agent.state.p_pos] + [agent.state.p_vel] + other_agents_pos + landmarks_pos)
         obs_lenght = len(obs)
 
         return np.concatenate([obs] + [np.zeros(100-obs_lenght)])
