@@ -198,6 +198,9 @@ class SimpleEnv(AECEnv):
         if self.viewer is None:
             self.viewer = rendering.Viewer(700, 700)
 
+        # reset renderer (entities will be redrawn in case their are dead)
+        self._reset_render()
+
         # create rendering geometry
         if self.render_geoms is None:
             # import rendering only if we need it (and don't import for headless machines)
@@ -205,7 +208,7 @@ class SimpleEnv(AECEnv):
             # from multiagent._mpe_utils import rendering
             self.render_geoms = []
             self.render_geoms_xform = []
-            for entity in self.world.entities:
+            for entity in self.world.alive_entities:
                 geom = rendering.make_circle(entity.size)
                 xform = rendering.Transform()
                 if 'agent' in entity.name:
@@ -249,8 +252,8 @@ class SimpleEnv(AECEnv):
         cam_range = np.max(np.abs(np.array(all_poses))) + 1
         self.viewer.set_max_size(cam_range)
         # update geometry positions
-        for e, entity in enumerate(self.world.entities):
-            self.render_geoms_xform[e].set_translation(*entity.state.p_pos)
+        for geom_xform, entity in zip(self.render_geoms_xform, self.world.alive_entities):
+            geom_xform.set_translation(*entity.state.p_pos)
         # render to display or array
         return self.viewer.render(return_rgb_array=mode == 'rgb_array')
 
