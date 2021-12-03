@@ -102,4 +102,4 @@ class Scenario(BaseScenario):
         obs = np.concatenate([agent.state.p_pos] + [agent.state.p_vel] + other_agents_pos + landmarks_pos)
         obs_lenght = len(obs)
 
-        return np.concatenate([obs] + [np.zeros(100-obs_lenght)])
+        return np.concatenate([obs] + [np.zeros(50-obs_lenght)])
